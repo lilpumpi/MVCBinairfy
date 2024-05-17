@@ -35,13 +35,13 @@ $view->setVariable("title", "Dashboard");
 
                     <div class="cambiarEstado" style="display: <?= $switch->getStatus() ? 'block' : 'none'; ?>">
                         <form action="index.php?controller=switchs&amp;action=changeStatus&amp;status=false&amp;redirect=dashboard" method="post">
-                            <input type="hidden" name="id" value="<?= $switch->getId(); ?>">
+                            <input type="hidden" name="id" value="<?= $switch->getPrivateId(); ?>">
                             <button type="submit" class="btn-cambiarEstado" id="btn-apagar"><?= i18n("Turn off") ?></button>
                         </form>
                     </div>
 
                     <div class="cambiarEstado" style="display: <?= $switch->getStatus() ? 'none' : 'block'; ?>">
-                        <button type="button" class="btn-cambiarEstado" id="btn-encender" onclick="openModal(<?= $switch->getId(); ?>, 'dashboard');"><?= i18n("Turn on") ?></button>
+                        <button type="button" class="btn-cambiarEstado" id="btn-encender" onclick="openModal('<?= $switch->getPrivateId(); ?>', 'dashboard');"><?= i18n("Turn on") ?></button>
                     </div>
 
                 </div>

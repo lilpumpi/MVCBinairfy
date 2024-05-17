@@ -35,38 +35,42 @@ $view->setVariable("title", "View Switch");
 
                 if (isset($_GET["public_id"])){
 
-                    if($suscription == NULL){ ?>
-                        <!-- Sino esta suscrito (susription == NULL) mostrar boton de suscribirse -->
-                        <div class="suscribe">
-                            <form action="index.php?controller=suscriptions&amp;action=add" method="post">
-                                <input type="hidden" name="id" value="<?= $switch->getId(); ?>">
-                                <button type="submit" name="submit" class="btn-suscribe" id="btn-suscribe"><?= i18n("Subscribe") ?></button>
-                            </form>
-                        </div>
+                    if($currentuser != NULL){
 
-                    <?php } else { ?>
-                        <!-- Si esta suscrito (susription != NULL) mostrar boton de desuscribirse -->
-                        <div class="suscribe">
-                            <form action="index.php?controller=suscriptions&amp;action=delete" method="post">
-                                <input type="hidden" name="id" value="<?= $suscription->getId(); ?>">
-                                <button type="submit" name="submit" class="btn-suscribe" id="btn-unsuscribe"><?= i18n("Unsubscribe") ?></button>
-                            </form>
-                        </div>
-                        
-                    <?php } ?>
+                        if($suscription == NULL){ ?>
+                            <!-- Sino esta suscrito (susription == NULL) mostrar boton de suscribirse -->
+                            <div class="suscribe">
+                                <form action="index.php?controller=suscriptions&amp;action=add" method="post">
+                                    <input type="hidden" name="id" value="<?= $switch->getId(); ?>">
+                                    <button type="submit" name="submit" class="btn-suscribe" id="btn-suscribe"><?= i18n("Subscribe") ?></button>
+                                </form>
+                            </div>
+
+                        <?php } else { ?>
+                            <!-- Si esta suscrito (susription != NULL) mostrar boton de desuscribirse -->
+                            <div class="suscribe">
+                                <form action="index.php?controller=suscriptions&amp;action=delete" method="post">
+                                    <input type="hidden" name="id" value="<?= $suscription->getId(); ?>">
+                                    <button type="submit" name="submit" class="btn-suscribe" id="btn-unsuscribe"><?= i18n("Unsubscribe") ?></button>
+                                </form>
+                            </div>
+                            
+                        <?php 
+                        } 
+                    }?>
                 <?php
 
                 } else if (isset($_GET["private_id"])) { ?>
                     
                     <div class="cambiarEstado" style="display: <?= $switch->getStatus() ? 'block' : 'none'; ?>">
-                        <form action="index.php?controller=switchs&amp;action=changeStatus&amp;status=false&amp;redirect=dashboard" method="post">
-                            <input type="hidden" name="id" value="<?= $switch->getId(); ?>">
+                        <form action="index.php?controller=switchs&amp;action=changeStatus&amp;status=false&amp;redirect=view" method="post">
+                            <input type="hidden" name="id" value="<?= $switch->getPrivateId(); ?>">
                             <button type="submit" name="submit" class="btn-cambiarEstado" id="btn-apagar"><?= i18n("Turn off") ?></button>
                         </form>
                     </div>
 
                     <div class="cambiarEstado" style="display: <?= $switch->getStatus() ? 'none' : 'block'; ?>">
-                        <button type="button" class="btn-cambiarEstado" id="btn-encender" onclick="openModal(<?= $switch->getId(); ?>, 'dashboard');"><?= i18n("Turn on") ?></button>
+                        <button type="button" class="btn-cambiarEstado" id="btn-encender" onclick="openModal('<?= $switch->getPrivateId(); ?>', 'view');"><?= i18n("Turn on") ?></button>
                     </div>
 
                 <?php 

@@ -76,6 +76,11 @@ class SwitchsController extends BaseController {
 
 		if (isset($_GET["public_id"])) {
 			$switchId = $this->switchMapper->findByPublicId($_GET["public_id"]);
+			//Exist suscription?
+			if ($this->currentUser !== null) {
+				$suscription = $this->suscriptionMapper->isSuscribed($this->currentUser->getUsername(), $switchId);
+				$this->view->setVariable("suscription", $suscription);
+			}
 
 		} else if (isset($_GET["private_id"])) {
 			$switchId = $this->switchMapper->findByPrivateId($_GET["private_id"]);
@@ -89,10 +94,6 @@ class SwitchsController extends BaseController {
 		if ($switch == NULL) {
 			throw new Exception("no such switch with id: ".$switchId);
 		}
-
-		//Exist suscription?
-		$suscription = $this->suscriptionMapper->isSuscribed($this->currentUser->getUsername(), $switchId);
-		$this->view->setVariable("suscription", $suscription);
 
 		// put the Switch object to the view
 		$this->view->setVariable("switch", $switch);
@@ -226,22 +227,18 @@ class SwitchsController extends BaseController {
 		$page = $_GET["redirect"];
 
 		// Obtener el ID del interruptor y el estado del formulario
-		$switchId = $_POST["id"];
+		$switchPrivateId = $_POST["id"];
 		$timeOff = $_POST["timeOff"];
 		$switchState = isset($_REQUEST['status']) && $_REQUEST['status'] === 'true' ? true : false;
 
 		// Obtener el interruptor de la base de datos
+		//Es privado
+		$switchId = $this->switchMapper->findByPrivateId($switchPrivateId);
 		$switch = $this->switchMapper->findById($switchId);
-
-		// Does the post exist?
 		if ($switch == NULL) {
 			throw new Exception("no such switch with id: ".$switchId);
 		}
 
-		// Check if the Switch author is the currentUser (in Session)
-		if ($switch->getOwner() != $this->currentUser) {
-			throw new Exception("Swith author is not the logged user");
-		}
 
 		// Actualizar el estado del interruptor en la base de datos según el estado del formulario
 		if ($switchState) {
@@ -267,9 +264,12 @@ class SwitchsController extends BaseController {
 		// Guardar los cambios en la base de datos
 		$this->switchMapper->update($switch);
 
-		//Redirigir al usuario de vuelta al mismo lugar
-		$this->view->redirect("switchs", $page);
-		
+		//Redirigir al usuario de vuelta al mismo lugar si es INDEX meter el id del switch
+		if($page == "view"){
+			$this->view->redirect("switchs", $page, "private_id=".$switchPrivateId);
+		} else{
+			$this->view->redirect("switchs", $page);
+		}
 		
 	}
 	
