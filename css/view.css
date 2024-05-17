@@ -110,3 +110,8 @@
     background-color: #ffa8a8;
     color: #222222;
 }
+
+/* Icons */
+.fa-circle-info, .fa-bars{
+    color: #2196F3;
+}

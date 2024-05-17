@@ -306,3 +306,9 @@ input[id="timeModal"] {
 button:hover {
     background-color: #0e83cd;
 }
+
+
+/* Icons */
+.fa-circle-info, .fa-bars{
+    color: #2196F3;
+}
